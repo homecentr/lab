@@ -1,0 +1,6 @@
+pve_zfs_max_arc_size_gb: 1
+
+# This creates a circular dependency, but alert e-mails from lab do not really matter
+pve_smtp_host: 10.1.8.130
+pve_smtp_port: 25
+pve_smtp_tls: false

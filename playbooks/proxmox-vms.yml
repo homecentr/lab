@@ -1,0 +1,15 @@
+- name: Create virtual machines for Lab cluster
+  hosts: all
+  become: true
+  become_method: ansible.builtin.sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Download iso image
+      # TODO
+
+    - name: Create storage network
+      # TODO: Use block in file
+
+    - name: Create lab cluster node VMs
+      # cpu type = host to enable nested virtualization
+      # mount iso as DVD
