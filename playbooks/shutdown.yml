@@ -1,0 +1,12 @@
+- name: Create automatic shutdown cron job
+  hosts: all
+  become: true
+  become_method: ansible.builtin.sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Create cron entry
+      ansible.builtin.cron:
+        hour: 23
+        minute: 59
+        name: "Evening shutdown"
+        job: /usr/sbin/shutdown
