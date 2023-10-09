@@ -23,7 +23,7 @@
 
     - name: Install required python packages
       ansible.builtin.package:
-        name: 
+        name:
           - python3-docker
           - python3-compose
         state: present

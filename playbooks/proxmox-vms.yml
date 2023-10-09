@@ -5,13 +5,13 @@
   any_errors_fatal: true
   handlers:
     - name: Reload networking
-      ansible.builtin.shell:
-        cmd: ifreload -a
+      changed_when: true
+      ansible.builtin.command: ifreload -a
 
   tasks:
     - name: Install required python packages
       ansible.builtin.package:
-        name: 
+        name:
           - python3-proxmoxer
         state: present
 
@@ -21,7 +21,7 @@
         dest: "/var/lib/vz/template/iso/{{ pve_lab_vms_iso_url | basename }}"
         checksum: "{{ pve_lab_vms_iso_checksum }}"
         mode: '0640'
-        
+
     - name: Create storage network
       notify: Reload networking
       ansible.builtin.blockinfile:
