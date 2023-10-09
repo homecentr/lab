@@ -34,4 +34,3 @@
         definition: "{{ lookup('template', 'templates/runners-docker-compose.yml.j2') | from_yaml }}"
         recreate: always
         state: present
-        # state: absent
