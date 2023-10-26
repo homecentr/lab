@@ -89,8 +89,8 @@
         vcpus: "8"
         sockets: "1"
         cores: "8"
-        memory: "16384"
-        balloon: "8192"
+        memory: "18432"
+        balloon: "18432"
         state: present
 
     - name: Wait for VMs to be created

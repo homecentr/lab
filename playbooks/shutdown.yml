@@ -6,7 +6,7 @@
   tasks:
     - name: Create cron entry
       ansible.builtin.cron:
-        hour: 23
+        hour: 1
         minute: 59
         name: "Evening shutdown"
         job: /usr/sbin/shutdown
