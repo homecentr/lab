@@ -16,6 +16,8 @@ collections:
 
 roles:
   - name: geerlingguy.pip
+    version: 2.2.0
   - name: geerlingguy.security
+    version: 2.2.0
   - name: geerlingguy.docker
     version: 7.0.1

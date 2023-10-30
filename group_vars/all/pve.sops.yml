@@ -2,10 +2,10 @@ pve_default_realm_name: ENC[AES256_GCM,data:VaNF,iv:DVu0ef1Uztb8CJa5PZwzcIKKflgH
 pve_openid_realms:
     - name: ENC[AES256_GCM,data:zGGc,iv:0jNuzM3ArlU4hwCB/iZiAvp0OhakmslXk3BJJH7gDLs=,tag:UwNFcC1+XOyb++U9PAtMog==,type:str]
       display_name: ENC[AES256_GCM,data:yyHnasNbA8MRtUSigSqgmX6moiNXJQ==,iv:bb090tnAH+zJAbYsGnmaYcw8P96SyF+hvODpZOaSkeA=,tag:407MABcbQIHH9iPKX/OQnw==,type:str]
-      client_id: ENC[AES256_GCM,data:20D+eivXYYVILXY7HEMQER3/SIg7TC+aY43S/Qd6TPdJTnns,iv:g/XvmjeMWfyjW+azwP5TqYW7aD24FfKQa6Q8rZd5Z+Q=,tag:/Otg30gd56kT6bSp5VUAiw==,type:str]
+      client_id: ENC[AES256_GCM,data:VKBxVrxSPhqjTzRxEJKufmq2GA8s4GnZAngsIILOOuq/Gxzr,iv:ln7ec8D1RFwa7XhNo600UKI4j9z5lY0N/Vip/p2tw3w=,tag:nWybBaNkDcWeICsHBjeMcA==,type:str]
       #ENC[AES256_GCM,data:WtvK0zfpdO549d1cgQrKegV61wG6QL8JTLqjOygzyn3cWghH1jClTxcKUe91sfyVzDAyHsj4IcWe1avgUA==,iv:lf4BwAh7IiCBaeO0ZulhAX6/bSKdWEEDPhieA1ilG1I=,tag:eK8RHfG+4n9buk+IAkS3vQ==,type:comment]
-      client_secret: ENC[AES256_GCM,data:WOZ9jctar0KUz1tKRQNpAmm7JCx7zxfCKfjz29dI1uymoeZU2e1siw==,iv:91fCzkhl0wTrHP+WTvUTw+46kcJnfTo4mdnhZW8c+es=,tag:bIsabuf95zaLE3ajzkBpog==,type:str]
-      url: ENC[AES256_GCM,data:4f9BpFgZpbOXyIfNDN8dFVnQbTrvT/OhPo5zJ41F+4vHLLWFjDYboCztzaGYiLAdJ7314hX28iwKWX47OehDENuURvFwU0nBW2ND,iv:s704OZBU0ZGXP9efwmrD+SaGeqn79gVrYU9Jfi6MBYg=,tag:pGQM8/R4zNq6hidlYWsAgA==,type:str]
+      client_secret: ENC[AES256_GCM,data:z1HUKTzqRs1RInvWH+/CX3L/0KIF0ijEQR/FqT2aSerYTX3IcGthEQ==,iv:ysw8DWFJFIgDZbtbWZRXobxCyjGRJepkswVX1o/H4IQ=,tag:d5swpiZ/XrK/DA5PTA1KRA==,type:str]
+      url: ENC[AES256_GCM,data:qX4Ztrt7p4+UfbRxqbsGILECMcQEVYJwQHdFkqL6pTgFlkB8yh8Wu4Ag0cuKckoL24cvDaJZDoNZkpbL/uBqvYjSoAU6YXs1hMZz,iv:xkM1csG5YEqkJLyAeF7omx+syRCmvSZc9n+NiUcCln4=,tag:Vb4Rcv1vurFbkmklCLoelA==,type:str]
       #ENC[AES256_GCM,data:bqetwB8Qqk7uiXisMDTStIR12zsA94YGdJz9i5UC3Yi7zNTHLwQD7FnA4d2IuqXNTG8C3J0Hyvc=,iv:nRjLWXa/EdNidmiyN4AmwzWC+eZOT2rE+JpnZBQdops=,tag:jewew45mABmLbnxHuPQ21g==,type:comment]
       autocreate_users: ENC[AES256_GCM,data:1HuCqWk=,iv:rtginL+v6lEvi76v0AOIv5OQTSNOEdoB4BYydvhMYN4=,tag:w0y0AJQRewa8l0uax4PXow==,type:bool]
       username_claim: ENC[AES256_GCM,data:fMhAm2o=,iv:lxP7RfJWSkjg6TufNRbVe/1b4BBQUOrPD7Eyvi+cnpw=,tag:3cf4fN3bZwJM/W/4qdIsrQ==,type:str]
@@ -41,8 +41,8 @@ sops:
             cWZDTjRmQUNqeFFXWVFXYzZaRzRhOWcKhATORzCnrd5mZuSiMZGEuLrk2I8ZSfYU
             afoukYbYCKvISAZR2YXMhD5hNhifgRD+/SS48e7S5CqqBrMoxP4x7w==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-10-05T10:26:27Z"
-    mac: ENC[AES256_GCM,data:W6aLSZqH+dsUyyLXMtV7YsnCTDz0LxB5LkqFJGABuexPfqKgHn0P3ZjWSH35l1EoOi4sHQeS2PdvbNiUbSalZ6fG/vhz/VRoQ6ii2cFBPwuHjIYXSAFL9Ed0OxuoS8HxpJ3x25BhHY54rhOwpgWXiwcJ64KhhQrWH9+XULGZ1+I=,iv:RsPTNog+rZTe8lWNjxoOd+1c86d1gVxU99ByXF3/ZD8=,tag:bZJF7vo1lHEIlCPhOQbXAQ==,type:str]
+    lastmodified: "2023-10-27T12:22:35Z"
+    mac: ENC[AES256_GCM,data:XVCYXjCwkyn1ETx2F4e0fPD155uXncc5qQUlSrjDIR47KsZ7jURv2DATzh8BrAUh9aPKI48lNpfWjCWzjHzHGuK54J1+s6n337wYGBvooQra8XbU1u+PAZP1/ynmvAv3Hf0e/Rin3qGkVE4SH7qIvDHpeHt2eyLsPhxkYeRMV9U=,iv:UpMVY9FppMU1rW27wuNPR8mLPYHwMkeArmYMtHMXqrA=,tag:RzXGHVmqAGIdC9KT6Amp3Q==,type:str]
     pgp:
         - created_at: "2023-10-04T19:45:00Z"
           enc: "-----BEGIN PGP MESSAGE-----\r\n\r\nhQIMA7Pg+ndCcR5CARAAgZKyxWvK6kxZkb2+5h0VV6tMkOxXRDh3iSdCAgUxXHF8\r\nDuu+ZL8CRHLhtmojeAEuehjlolvRczzMYCroxsV5USokfQbANIAk3f+K/EnSvak6\r\nlHyJ3QLcJCHfMbGQDRScFAJmog9py+3y8UPgxMSFePUpwLgbXXDLljBLoaNsGpcq\r\nBq4m4VuEOq8BiRV/MdH3y4/GhIX7F3ywC9f1D/LsjluYRy2+K9X+7xFPolxSR0cM\r\n3FKNvK49rloLjf9uZEVfZ3aGdE5qGn5AJnHRyPidgbk/x8NlOf2g5jTQ4oZfxJrj\r\n5y2FzRjitJl8P6nHYua0lIZkTUED6PCiC2X8SJSajXArerNkMRBKTGb7XTHKZdcT\r\ntey4FiDsTsVPHhGmW1fZ63byILRckDlLgsr7ZEceNWP+rPSVjSH3R5YWuAAjBY2G\r\n3718eLw50naVCnrZ4mMh05gRuAM9MKVhASRFKBKT+5H14Rhc7cT7o0oC2qITsNu1\r\n7I8lhnzutXZmK9ni1g2oB5tjuq2y/cBp0jFR9gMg+usdcZWyeVtNUzKaADe7YCdG\r\nLj59xNL9Pk825CVHwjfnfyb4qbpM8FMW8VX5y8obq0MSdRZPDnMcTiCQk1stmZ6M\r\nWsM8q/Ge899j7uyqZUZiynlE9tW3FvQ5tFPyArjd76Zuuve9WRr5tRe75oYmd+PS\r\nXgHxdN2eUYZlyR0na36CvPP7sO/B1rjbhw1JlaaN5qDiy/2WyJKNd/8vtldEut9O\r\n9JUULZ9WXzqcsBugzWI5FwRlYx9Rq9o0xSIjFjTFEuNvNLzqbJTXtSqfkIRin7Y=\r\n=yq0q\r\n-----END PGP MESSAGE-----\r\n"
