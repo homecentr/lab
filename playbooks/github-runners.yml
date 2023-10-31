@@ -16,10 +16,12 @@
         database: group
         split: ':'
         key: "docker"
+      tags: [ docker-stack ]
 
     - name: Set docker group id to facts
       ansible.builtin.set_fact:
         docker_gid: "{{ ansible_facts.getent_group['docker'][1] }}"
+      tags: [ docker-stack ]
 
     - name: Install required python packages
       ansible.builtin.package:
@@ -27,6 +29,7 @@
           - python3-docker
           - python3-compose
         state: present
+        tags: [ docker-stack ]
 
     - name: Set up runners compose stack
       community.docker.docker_compose:
@@ -34,3 +37,4 @@
         definition: "{{ lookup('template', 'templates/runners-docker-compose.yml.j2') | from_yaml }}"
         recreate: always
         state: present
+      tags: [ docker-stack ]
