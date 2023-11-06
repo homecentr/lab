@@ -1,0 +1,80 @@
+- name: Proxmox Virtual Environment Configuration
+  hosts: all
+  become: true
+  become_method: ansible.builtin.sudo
+  any_errors_fatal: true
+  tasks:
+    # Must run before users to make sure the apt repositories are configured in order to install sudo
+    - name: Configure Proxmox VE specific components
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_apt
+      tags: [ init, pve-apt ]
+
+    # Root's password must be set so that it can be used to communicate with Proxmox API
+    - name: Create users
+      ansible.builtin.import_role:
+        name: homecentr.system.users
+      tags: [ init, users ]
+
+    - name: Configure proxmox user permissions
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_users
+      tags: [ init, users ]
+
+    - name: Install and configure Chrony
+      ansible.builtin.import_role:
+        name: homecentr.system.chrony
+      tags: [ chrony ]
+
+    - name: Configure ZFS
+      ansible.builtin.import_role:
+        name: homecentr.system.zfs_configuration
+      tags: [ zfs-config ]
+
+    - name: Install benchmarks
+      ansible.builtin.import_role:
+        name: homecentr.system.benchmarks
+      tags: [ benchmarks ]
+
+    - name: Configure MOTD
+      ansible.builtin.import_role:
+        name: homecentr.system.motd
+      tags: [ motd ]
+
+    - name: Configure SSH
+      ansible.builtin.import_role:
+        name: homecentr.system.ssh
+      tags: [ ssh ]
+
+    - name: Configure corosync fix
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_corosync_fix
+      tags: [ pve-corosync ]
+
+    - name: Configure https port forwarding
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_https_forward
+      tags: [ pve-https-forward ]
+
+    - name: Configure PCI passthrough dependencies
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_pci_passthrough
+      tags: [ pve-pci-passthrough ]
+
+    - name: Configure SMTP
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_smtp
+      tags: [ pve-smtp ]
+
+    - name: Configure SSO via Open ID
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_sso_openid
+      tags: [ pve-sso-openid ]
+
+    - name: Configure ACME
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_acme
+      tags: [ acme ]
+
+    - name: Flush handlers before starting the VMs
+      ansible.builtin.meta: flush_handlers

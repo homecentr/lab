@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+{% for i in range(github_runner_instance_count) %}
+  runner{{ i + 1 }}:
+    image: homecentr/github-runner:{{ github_runner_image_tag }}
+    restart: unless-stopped
+    user: "github-runner:{{ docker_gid }}"
+    # entrypoint: bash
+    # command: "-l -c 'sleep infinity'"
+    networks:
+      default:
+      external:
+    environment:
+      GH_OWNER: homecentr
+      GH_TOKEN: {{ github_runner_token }}
+      RUNNER_NAME: "Homecenter-Runner-{{ i + 1 }}"
+      HOST_NAME: {{ ansible_hostname }}
+      HOST_IP: {{ ansible_host }}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+{% endfor %}
+
+networks:
+  default:
+
+  external:
+    driver: macvlan
+    driver_opts:
+      parent: vmbr0
+    ipam:
+      config:
+        - subnet: "{{ github_runner_network.subnet }}"
+          ip_range: "{{ github_runner_network.ip_range }}"
+          gateway: "{{ github_runner_network.gateway }}"

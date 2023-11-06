@@ -1,0 +1,13 @@
+pve_zfs_max_arc_size_gb: 1
+
+# This creates a circular dependency, but alert e-mails from lab do not really matter
+pve_smtp_host: 10.1.8.130
+pve_smtp_port: 25
+pve_smtp_tls: false
+
+pve_lab_vms_force_recreate: false
+
+pve_lab_vms_count: 3
+pve_lab_vms_os_disk_size_gb: 50
+pve_lab_vms_iso_url: https://enterprise.proxmox.com/iso/proxmox-ve_8.0-2.iso
+pve_lab_vms_iso_checksum: sha256:e2b27648a8a91c0da1e8e718882a5ff87a8f054c4dd7e0ea1d8af85125d82812

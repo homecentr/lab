@@ -1,0 +1,4 @@
+- import_playbook: proxmox.yml
+- import_playbook: github-runners.yml
+- import_playbook: proxmox-vms.yml
+- import_playbook: shutdown.yml

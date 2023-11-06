@@ -1,0 +1,23 @@
+---
+collections:
+  - name: ansible.posix
+    version: 1.4.0
+  - name: oasis_roles.system
+  - name: community.docker
+    version: 3.4.8
+  - name: community.general
+    version: 7.4.0
+  - name: https://github.com/homecentr/ansible-collection-system
+    type: git
+    version: master
+  - name: https://github.com/homecentr/ansible-collection-proxmox
+    type: git
+    version: master
+
+roles:
+  - name: geerlingguy.pip
+    version: 2.2.0
+  - name: geerlingguy.security
+    version: 2.2.0
+  - name: geerlingguy.docker
+    version: 7.0.1

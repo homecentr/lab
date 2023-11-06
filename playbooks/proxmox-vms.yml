@@ -1,0 +1,120 @@
+- name: Create virtual machines for Lab cluster
+  hosts: all
+  become: true
+  become_method: ansible.builtin.sudo
+  any_errors_fatal: true
+  handlers:
+    - name: Reload networking
+      changed_when: true
+      ansible.builtin.command: ifreload -a
+
+  tasks:
+    - name: Install required python packages
+      ansible.builtin.package:
+        name:
+          - python3-proxmoxer
+        state: present
+
+    - name: Download iso image
+      ansible.builtin.get_url:
+        url: "{{ pve_lab_vms_iso_url }}"
+        dest: "/var/lib/vz/template/iso/{{ pve_lab_vms_iso_url | basename }}"
+        checksum: "{{ pve_lab_vms_iso_checksum }}"
+        mode: '0640'
+
+    - name: Create storage network
+      notify: Reload networking
+      ansible.builtin.blockinfile:
+        path: /etc/network/interfaces
+        block: |
+          auto vmbr1
+          iface vmbr1 inet static
+            address  192.168.7.1
+            netmask  255.255.255.0
+            bridge_ports none
+            bridge_stp off
+            bridge_fd 0
+
+    - name: Destroy lab cluster node VMs
+      when: pve_lab_vms_force_recreate
+      loop: "{{ range(0, 1, 1) | list }}" # TODO
+      loop_control:
+        index_var: index
+      community.general.proxmox_kvm:
+        name: "pve-lab-{{ index + 1 }}"
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        state: absent
+
+    - name: Create lab cluster node VMs
+      register: vm
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}" # TODO
+      loop_control:
+        index_var: index
+      community.general.proxmox_kvm:
+        proxmox_default_behavior: no_defaults
+        node: "{{ ansible_hostname }}"
+        kvm: true
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        name: "pve-lab-{{ index + 1 }}"
+        protection: false
+        acpi: true
+        autostart: true
+        onboot: true
+        ostype: l26
+        boot: "order=scsi1;scsi0"
+        bios: ovmf
+        startup: down=60
+        # # required due to a bug: https://forum.proxmox.com/threads/kernel-panic-after-resizing-a-clone.93738/
+        # # which causes kernel panic after resizing the os disk
+        serial:
+          serial0: socket
+        scsi:
+          scsi0: "local:iso/{{ pve_lab_vms_iso_url | basename }}"
+        net:
+          net0: "virtio,bridge=vmbr0"
+          net1: "virtio,bridge=vmbr1"
+        efidisk0:
+          storage: local-zfs
+          format: raw
+          efitype: 4m
+          pre_enrolled_keys: false
+        scsihw: virtio-scsi-pci
+        bootdisk: scsi1
+        tablet: false
+        cpu: "host" # To enable nested virtualization
+        vcpus: "8"
+        sockets: "1"
+        cores: "8"
+        memory: "18432"
+        balloon: "18432"
+        state: present
+
+    - name: Wait for VMs to be created
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}" # TODO
+      loop_control:
+        index_var: index
+      community.general.proxmox_vm_info:
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        name: "pve-lab-{{ index + 1 }}"
+
+    - name: Create cluster nodes OS disks
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}" # TODO
+      loop_control:
+        index_var: index
+      community.general.proxmox_disk:
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        name: "pve-lab-{{ index + 1 }}"
+        disk: scsi1
+        backup: true
+        cache: none
+        storage: local-zfs
+        size: "{{ pve_lab_vms_os_disk_size_gb }}"
+        state: present
