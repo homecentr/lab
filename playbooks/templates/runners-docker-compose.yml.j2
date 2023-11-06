@@ -31,6 +31,6 @@ networks:
       parent: vmbr0
     ipam:
       config:
-        - subnet: "10.1.8.0/24"
-          ip_range: "10.1.8.224/27"
-          gateway: "10.1.8.1"
+        - subnet: "{{ github_runner_network.subnet }}"
+          ip_range: "{{ github_runner_network.ip_range }}"
+          gateway: "{{ github_runner_network.gateway }}"
