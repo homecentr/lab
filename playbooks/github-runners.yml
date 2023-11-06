@@ -24,12 +24,12 @@
       tags: [ docker-stack ]
 
     - name: Install required python packages
-      ansible.builtin.package:
+      ansible.builtin.apt:
         name:
           - python3-docker
           - python3-compose
         state: present
-        tags: [ docker-stack ]
+      tags: [ docker-stack ]
 
     - name: Set up runners compose stack
       community.docker.docker_compose:
