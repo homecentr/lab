@@ -7,7 +7,7 @@
     - name: Reload networking
       changed_when: true
       ansible.builtin.command: ifreload -a
-      
+
   tasks:
     - name: Download iso image
       ansible.builtin.get_url:
