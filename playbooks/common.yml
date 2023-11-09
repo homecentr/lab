@@ -1,0 +1,31 @@
+- name: Configure common utilities
+  hosts: all
+  become: true
+  become_method: ansible.builtin.sudo
+  any_errors_fatal: true
+  tasks:
+    # Root's password must be set so that it can be used to communicate with Proxmox API
+    - name: Create users
+      ansible.builtin.import_role:
+        name: homecentr.system.users
+      tags: [ init, users ]
+
+    - name: Install and configure Chrony
+      ansible.builtin.import_role:
+        name: homecentr.system.chrony
+      tags: [ chrony ]
+
+    - name: Install benchmarks
+      ansible.builtin.import_role:
+        name: homecentr.system.benchmarks
+      tags: [ benchmarks ]
+
+    - name: Configure MOTD
+      ansible.builtin.import_role:
+        name: homecentr.system.motd
+      tags: [ motd ]
+
+    - name: Configure SSH
+      ansible.builtin.import_role:
+        name: homecentr.system.ssh
+      tags: [ ssh ]

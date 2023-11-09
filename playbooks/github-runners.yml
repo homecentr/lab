@@ -1,5 +1,139 @@
-- name: Install and configure self-hosted GitHub runner containers
-  hosts: all
+- name: Create virtual machines for GitHub runners
+  hosts: proxmox
+  become: true
+  become_method: ansible.builtin.sudo
+  any_errors_fatal: true
+  tasks:
+    - name: Download cloud images
+      ansible.builtin.get_url:
+        url: "{{ github_runner_vm.cloud_image.url }}"
+        dest: "/var/lib/vz/images/{{ github_runner_vm.cloud_image.filename }}"
+        checksum: "{{ github_runner_vm.cloud_image.checksum }}"
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Create cloud-init config
+      ansible.builtin.copy:
+        dest: "/var/lib/vz/snippets/{{ github_runner_vm.vmid }}.yml"
+        owner: root
+        group: root
+        mode: 0640
+        force: true
+        content: |
+          #cloud-config
+          hostname: {{ github_runner_vm.hostname }}
+          manage_etc_hosts: false
+          user: "{{ (users_admin_users | first).username }}"
+          password: Heslo123
+          chpasswd:
+            expire: false
+          users:
+            - default
+          {% for user in users_admin_users %}
+            - name: {{ user.username }}
+              sudo: ALL=(ALL) NOPASSWD:ALL
+              ssh_authorized_keys:
+          {% for key in user.public_keys %}
+              - {{ key }}
+          {% endfor %}
+          {% endfor %}
+          package_upgrade: true
+
+    - name: Create virtual machine
+      community.general.proxmox_kvm:
+        vmid: "{{ github_runner_vm.vmid }}"
+        proxmox_default_behavior: no_defaults
+        node: "{{ ansible_hostname }}"
+        kvm: true
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        name: "{{ github_runner_vm.hostname }}"
+        acpi: "true"
+        autostart: "true"
+        onboot: "true"
+        ostype: "l26"
+        boot: "cd"
+        ciuser: "{{ (users_admin_users | first).username }}"
+        cipassword: "Heslo123"
+        sshkeys: "{{ (users_admin_users | first).public_keys | join('\n') }}"
+        cicustom: "user=local:snippets/{{ github_runner_vm.vmid }}.yml"
+        bios: "ovmf"
+        startup: "down=30"
+        # required due to a bug: https://forum.proxmox.com/threads/kernel-panic-after-resizing-a-clone.93738/
+        # which causes kernel panic after resizing the os disk
+        serial:
+          serial0: socket
+        scsi:
+          scsi0: "local-zfs:cloudinit,format=raw"
+        net:
+          net0: "virtio,bridge={{ github_runner_vm.nic_bridge }}"
+        ipconfig:
+          ipconfig0: "ip={{ (github_runner_vm.nic_ipv4.address + '/' + github_runner_vm.nic_ipv4.subnet_mask) | ansible.utils.ipaddr('host/prefix') }},gw={{ github_runner_vm.nic_ipv4.gateway }}" # noqa yaml[line-length]
+        nameservers: "{{ github_runner_vm.nameservers }}"
+        efidisk0:
+          storage: "{{ github_runner_vm.os_storage }}"
+          format: "raw"
+          efitype: "4m"
+          pre_enrolled_keys: false
+        scsihw: virtio-scsi-pci
+        bootdisk: scsi1
+        tablet: false
+        cpu: "kvm64"
+        vcpus: "8"
+        sockets: "1"
+        cores: "8"
+        memory: "{{ 1024 * 8 }}"
+        balloon: "{{ 1024 * 4 }}"
+        state: present
+
+    - name: Import disk from cloud image
+      register: vm_disk
+      retries: 5 # transient timeouts
+      until: vm_disk.vmid == github_runner_vm.vmid
+      community.general.proxmox_disk:
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        vmid: "{{ github_runner_vm.vmid }}"
+        disk: scsi1
+        import_from: "/var/lib/vz/images/{{ github_runner_vm.cloud_image.filename }}"
+        storage: "{{ github_runner_vm.os_storage }}"
+        ssd: true
+        timeout: 600
+        state: present
+
+    - name: Resize imported system disk
+      community.general.proxmox_disk:
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        vmid: "{{ github_runner_vm.vmid }}"
+        disk: scsi1
+        size: "{{ github_runner_vm.os_disk_size }}"
+        state: resized
+
+    - name: Start VM
+      community.general.proxmox_kvm:
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        node: "{{ ansible_hostname }}"
+        vmid: "{{ github_runner_vm.vmid }}"
+        state: started
+
+    - name: Wait for VM to start responding on SSH
+      ansible.builtin.wait_for:
+        host: "{{ github_runner_vm.nic_ipv4.address }}"
+        port: 22
+        timeout: 400
+        sleep: 2
+        msg: "VM did not start responding on SSH in time."
+
+
+- name: Install and configure self-hosted GitHub runner containers inside of the VM
+  hosts: github_runners
   become: true
   become_method: ansible.builtin.sudo
   any_errors_fatal: true
