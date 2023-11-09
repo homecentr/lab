@@ -1,3 +1,8 @@
 all:
-  hosts:
-    lab:
+  children:
+    proxmox:
+      hosts:
+        lab:
+    github_runners:
+      hosts:
+        github_runners:

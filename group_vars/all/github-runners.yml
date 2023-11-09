@@ -1,0 +1,20 @@
+github_runner_instance_count: 4
+github_runner_image_tag: latest
+
+github_runner_vm:
+  vmid: 900
+  hostname: github-runners # ???
+  os_storage: local-zfs
+  os_disk_size: 50G
+  nic_bridge: vmbr0
+  nic_ipv4:
+    address: 10.1.8.9
+    subnet_mask: 255.255.255.0
+    gateway: 10.1.8.1
+  nameservers:
+    - 1.1.1.1
+    - 1.0.0.1
+  cloud_image:
+    filename: debian-12.1.0.qcow2
+    url: https://cloud.debian.org/images/cloud/bookworm/20230723-1450/debian-12-generic-amd64-20230723-1450.qcow2
+    checksum: sha512:398589d1baa0c1a79358d2c6f14ba9212c25419df2693c513645cb493e15e19952f873703f27d87c491272a478f51a957fb26b21f485dca5933db6be37207d59

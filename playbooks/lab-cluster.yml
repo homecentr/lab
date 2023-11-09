@@ -9,12 +9,6 @@
       ansible.builtin.command: ifreload -a
 
   tasks:
-    - name: Install required python packages
-      ansible.builtin.package:
-        name:
-          - python3-proxmoxer
-        state: present
-
     - name: Download iso image
       ansible.builtin.get_url:
         url: "{{ pve_lab_vms_iso_url }}"

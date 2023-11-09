@@ -1,5 +1,5 @@
 - name: Create automatic shutdown cron job
-  hosts: all
+  hosts: proxmox
   become: true
   become_method: ansible.builtin.sudo
   any_errors_fatal: true

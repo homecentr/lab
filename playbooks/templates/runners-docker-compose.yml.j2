@@ -5,11 +5,8 @@ services:
     image: homecentr/github-runner:{{ github_runner_image_tag }}
     restart: unless-stopped
     user: "github-runner:{{ docker_gid }}"
-    # entrypoint: bash
-    # command: "-l -c 'sleep infinity'"
     networks:
       default:
-      external:
     environment:
       GH_OWNER: homecentr
       GH_TOKEN: {{ github_runner_token }}
@@ -24,13 +21,3 @@ services:
 
 networks:
   default:
-
-  external:
-    driver: macvlan
-    driver_opts:
-      parent: vmbr0
-    ipam:
-      config:
-        - subnet: "{{ github_runner_network.subnet }}"
-          ip_range: "{{ github_runner_network.ip_range }}"
-          gateway: "{{ github_runner_network.gateway }}"

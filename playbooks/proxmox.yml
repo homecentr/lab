@@ -1,5 +1,5 @@
 - name: Proxmox Virtual Environment Configuration
-  hosts: all
+  hosts: proxmox
   become: true
   become_method: ansible.builtin.sudo
   any_errors_fatal: true
@@ -21,30 +21,10 @@
         name: homecentr.proxmox.pve_users
       tags: [ init, users ]
 
-    - name: Install and configure Chrony
-      ansible.builtin.import_role:
-        name: homecentr.system.chrony
-      tags: [ chrony ]
-
     - name: Configure ZFS
       ansible.builtin.import_role:
         name: homecentr.system.zfs_configuration
       tags: [ zfs-config ]
-
-    - name: Install benchmarks
-      ansible.builtin.import_role:
-        name: homecentr.system.benchmarks
-      tags: [ benchmarks ]
-
-    - name: Configure MOTD
-      ansible.builtin.import_role:
-        name: homecentr.system.motd
-      tags: [ motd ]
-
-    - name: Configure SSH
-      ansible.builtin.import_role:
-        name: homecentr.system.ssh
-      tags: [ ssh ]
 
     - name: Configure corosync fix
       ansible.builtin.import_role:
@@ -74,7 +54,21 @@
     - name: Configure ACME
       ansible.builtin.import_role:
         name: homecentr.proxmox.pve_acme
-      tags: [ acme ]
+      tags: [ pve_acme ]
+
+    - name: Configure local storage
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_local_storage
+      tags: [ pve_storage ]
+      vars:
+        pve_local_storage_api_user: root@pam
+        pve_local_storage_api_password: "{{ users_root_password }}"
+
+    - name: Install required python packages
+      ansible.builtin.package:
+        name:
+          - python3-proxmoxer
+        state: present
 
     - name: Flush handlers before starting the VMs
       ansible.builtin.meta: flush_handlers
