@@ -61,8 +61,8 @@
         name: homecentr.proxmox.pve_local_storage
       tags: [ pve_storage ]
       vars:
-        pve_storage_snippets_api_user: root@pam
-        pve_storage_snippets_api_password: "{{ users_root_password }}"
+        pve_local_storage_api_user: root@pam
+        pve_local_storage_api_password: "{{ users_root_password }}"
 
     - name: Install required python packages
       ansible.builtin.package:
