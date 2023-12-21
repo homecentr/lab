@@ -1,5 +1,5 @@
 - name: Create virtual machines for Lab cluster
-  hosts: all
+  hosts: proxmox
   become: true
   become_method: ansible.builtin.sudo
   any_errors_fatal: true
@@ -62,8 +62,8 @@
         boot: "order=scsi1;scsi0"
         bios: ovmf
         startup: down=60
-        # # required due to a bug: https://forum.proxmox.com/threads/kernel-panic-after-resizing-a-clone.93738/
-        # # which causes kernel panic after resizing the os disk
+        # required due to a bug: https://forum.proxmox.com/threads/kernel-panic-after-resizing-a-clone.93738/
+        # which causes kernel panic after resizing the os disk
         serial:
           serial0: socket
         scsi:
