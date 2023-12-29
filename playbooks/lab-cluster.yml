@@ -83,8 +83,8 @@
         vcpus: "8"
         sockets: "1"
         cores: "8"
-        memory: "18432"
-        balloon: "18432"
+        memory: "{{ index == 2 | ternary('16384', '18432') }}" # Third node with lower memory to simulate real production env
+        balloon: "0"
         state: present
 
     - name: Wait for VMs to be created
