@@ -31,7 +31,7 @@
 
     - name: Destroy lab cluster node VMs
       when: pve_lab_vms_force_recreate
-      loop: "{{ range(0, 1, 1) | list }}" # TODO
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}"
       loop_control:
         index_var: index
       community.general.proxmox_kvm:
@@ -42,17 +42,16 @@
         state: absent
 
     - name: Create lab cluster node VMs
-      register: vm
-      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}" # TODO
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}"
       loop_control:
         index_var: index
       community.general.proxmox_kvm:
-        proxmox_default_behavior: no_defaults
         node: "{{ ansible_hostname }}"
         kvm: true
         api_user: root@pam
         api_password: "{{ users_root_password }}"
         api_host: 127.0.0.1
+        vmid: "{{ 100 + index + 1 }}"
         name: "pve-lab-{{ index + 1 }}"
         protection: false
         acpi: true
@@ -62,6 +61,7 @@
         boot: "order=scsi1;scsi0"
         bios: ovmf
         startup: down=60
+
         # required due to a bug: https://forum.proxmox.com/threads/kernel-panic-after-resizing-a-clone.93738/
         # which causes kernel panic after resizing the os disk
         serial:
@@ -83,12 +83,13 @@
         vcpus: "8"
         sockets: "1"
         cores: "8"
-        memory: "{{ index == 2 | ternary('16384', '18432') }}" # Third node with lower memory to simulate real production env
+        memory: "{{ '16384' if index == 2 else '18432' }}" # Third node with lower memory to simulate real production env
         balloon: "0"
         state: present
 
+    # Retry loop ???
     - name: Wait for VMs to be created
-      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}" # TODO
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}"
       loop_control:
         index_var: index
       community.general.proxmox_vm_info:
@@ -98,7 +99,7 @@
         name: "pve-lab-{{ index + 1 }}"
 
     - name: Create cluster nodes OS disks
-      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}" # TODO
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}"
       loop_control:
         index_var: index
       community.general.proxmox_disk:
@@ -111,4 +112,20 @@
         cache: none
         storage: local-zfs
         size: "{{ pve_lab_vms_os_disk_size_gb }}"
+        state: present
+
+    - name: Create cluster nodes data disks
+      loop: "{{ range(0, pve_lab_vms_count, 1) | list }}"
+      loop_control:
+        index_var: index
+      community.general.proxmox_disk:
+        api_user: root@pam
+        api_password: "{{ users_root_password }}"
+        api_host: 127.0.0.1
+        name: "pve-lab-{{ index + 1 }}"
+        disk: scsi2
+        backup: true
+        cache: none
+        storage: local-zfs
+        size: "{{ pve_lab_vms_data_disk_size_gb }}"
         state: present
