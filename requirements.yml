@@ -12,7 +12,7 @@ collections:
     version: master
   - name: https://github.com/homecentr/ansible-collection-proxmox
     type: git
-    version: master
+    version: origin/fix/https-forward-2 # master
 
 roles:
   - name: geerlingguy.pip

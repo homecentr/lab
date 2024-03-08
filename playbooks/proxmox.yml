@@ -36,6 +36,11 @@
         name: homecentr.proxmox.pve_https_forward
       tags: [ pve-https-forward ]
 
+    - name: Remove the no-subscription warning
+      ansible.builtin.import_role:
+        name: homecentr.proxmox.pve_nosubs_warning
+      tags: [ no-subs-warning ]
+
     - name: Configure PCI passthrough dependencies
       ansible.builtin.import_role:
         name: homecentr.proxmox.pve_pci_passthrough

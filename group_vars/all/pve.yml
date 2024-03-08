@@ -10,5 +10,5 @@ pve_lab_vms_force_recreate: false
 pve_lab_vms_count: 3
 pve_lab_vms_os_disk_size_gb: 30
 pve_lab_vms_data_disk_size_gb: 70
-pve_lab_vms_iso_url: https://enterprise.proxmox.com/iso/proxmox-ve_8.0-2.iso
-pve_lab_vms_iso_checksum: sha256:e2b27648a8a91c0da1e8e718882a5ff87a8f054c4dd7e0ea1d8af85125d82812
+pve_lab_vms_iso_url: https://enterprise.proxmox.com/iso/proxmox-ve_8.1-2.iso
+pve_lab_vms_iso_checksum: sha256:f3e3d2a6ad8e44020a499855475a304dbb672c284410a3792826098c906c63c0
